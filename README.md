@@ -1,4 +1,4 @@
-A collection scripts I've written while working on stuff at [KokuTech]([text](https://www.kokutech.com/))
+Scripts I've written while working on stuff at [KokuTech](https://www.kokutech.com/).
 
 ## Contents
 

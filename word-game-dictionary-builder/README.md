@@ -2,6 +2,10 @@
 
 Tools for building and formatting word dictionaries, optimized for word games and similar applications. Features include length-based filtering, unique letter filtering, and trie structure conversion for efficient prefix lookups.
 
+## Example
+
+I used these to build the latest version of [WordRamp](https://reset.kokutech.com/wordramp-letter-scrambler-browser-game), a letter scrambler that requires you to build words of varying lengths (4>5>6>5>4) which only contain unique letters.
+
 ## Components
 
 ### Dictionary Formatter ([dictionary_formatter.py](./dictionary_formatter.py))
