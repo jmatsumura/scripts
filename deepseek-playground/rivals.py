@@ -38,7 +38,7 @@ def generate_design(agent_name, agent_desc, opponent_idea=None, past_designs=Non
     )
 
     competition_context = (
-        f"# Design Philosophy\n{agent_name}: {agent_desc}\n\n"
+        f"# Your Design Philosophy\n{agent_name}: {agent_desc}\n\n"
         f"# Competition Stakes\n{developer_message}\n\n"
         f"# Design Challenge\n{TASK}\n\n"
     )
