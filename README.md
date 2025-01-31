@@ -2,7 +2,10 @@ Scripts I've written while working on stuff at [KokuTech](https://www.kokutech.c
 
 ## Contents
 
-### [Word Game Dictionary Builder](word-game-dictionary-builder/)
+### [Deepseek Playground](./deepseek-playground/)
+Scripts for playing around with Deepseek locally and learning what's possible now that there's a much lower cost for complex reasoning generations.
+
+### [Word Game Dictionary Builder](./word-game-dictionary-builder/)
 Tools for building and formatting word dictionaries, with outputs optimized for word games and similar applications.
 
 _More tools coming soon..._

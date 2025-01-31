@@ -1,0 +1,1 @@
+A set of scripts to play around with Deepseek locally.
