@@ -115,8 +115,9 @@ def run_experiment(rounds=3):
         print(f"\n### ROUND {round_num} ###\n")
 
         # Aggregate all past insights for deeper inspiration
-        minimalist_thought_history = "\n".join(results["Expressive"]["thoughts"]) if results["Expressive"]["thoughts"] else None
-        expressive_thought_history = "\n".join(results["Minimalist"]["thoughts"]) if results["Minimalist"]["thoughts"] else None
+        # filter to just the last 5 rounds
+        minimalist_thought_history = "\n".join(results["Expressive"]["thoughts"][-5:]) if results["Expressive"]["thoughts"] else None
+        expressive_thought_history = "\n".join(results["Minimalist"]["thoughts"][-5:]) if results["Minimalist"]["thoughts"] else None
 
         # First round has no shared insights
         minimalist_previous_think = minimalist_thought_history if round_num > 1 else None
