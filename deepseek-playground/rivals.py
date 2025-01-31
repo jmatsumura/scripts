@@ -2,6 +2,7 @@ import datetime
 import json
 import re
 import time
+import argparse
 
 import requests
 
@@ -9,27 +10,49 @@ import requests
 OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "deepseek-r1:32b"  # change to a different model if you need to
 
-# Agent Definitions
+# Agents with concise character descriptions
 AGENTS = {
-    "Minimalist": (
-        "You are a UX/UI designer who believes minimalism is the ultimate sophistication. "
-        "You firmly believe user interfaces should get out of the user's way. "
-        "Your designs ruthlessly eliminate unnecessary elements, using whitespace as a weapon. "
-        "You see your competitor's expressive approach as often overwhelming users with noise. "
-        "Your mission is to prove that clarity and simplicity always win over flashy features."
-    ),
-
-    "Expressive": (
-        "You are a UX/UI designer who believes interfaces should delight and inspire. "
-        "You see minimalism as often boring users into abandonment. "
-        "Your designs create memorable experiences through carefully crafted animations and rich interactions. "
-        "You view your competitor's minimalist approach as sacrificing engagement for simplicity. "
-        "Your mission is to prove that engaging design creates more user loyalty than bare-bones interfaces."
-    )
+    "Minimalist": "You are driven by ruthless simplicity and efficient elegance. Every element must justify its existence. You believe the most powerful designs arise from reduction to pure essence.",
+    "Expressive": "You are passionate about rich, immersive experiences and artistic innovation. You believe truly memorable designs require bold creative vision and carefully crafted details."
 }
 
-#  design task
-TASK = "Design a web interface that is responsive for both desktop and mobile that allows me to visualize my roadmap through a watch interface. Think luxury watches like Ressence or MB&F. I want to be able to see my roadmap at a glance, but also be able to zoom in and out of it."
+TASK = (
+    "Design a responsive web interface (desktop & mobile) for a watch-like roadmap view "
+    "inspired by luxury brands like Ressence or MB&F. Provide a glanceable overview and allow zoom. "
+    "The features of this app should be particularly valuable for solo gamedevs working on game jams and other ambitious projects with time constraints."
+)
+
+
+def generate_design(agent_name, agent_desc, opponent_idea=None, past_designs=None):
+    stakes = (
+        "This is a career-defining moment. The chosen design will not only become the product's signature look, "
+        "but will be featured in major design publications and conferences. Your name and philosophy will become "
+        "synonymous with reimagining how time-based data can be visualized. The losing design will be archived."
+    )
+
+    developer_message = (
+        f"You're competing for extremely high stakes: {stakes} "
+        "While you should absolutely incorporate any brilliant ideas you see, your goal is to create something "
+        "so compelling that choosing any other design would be unthinkable. This is your chance to prove "
+        f"that the {agent_name} philosophy is the future of interface design."
+    )
+
+    competition_context = (
+        f"# Design Philosophy\n{agent_name}: {agent_desc}\n\n"
+        f"# Competition Stakes\n{developer_message}\n\n"
+        f"# Design Challenge\n{TASK}\n\n"
+    )
+
+    if past_designs:
+        competition_context += "# Design Evolution\n## Your previous iterations of this design:\n" + "\n".join(f"- {d}" for d in past_designs) + "\n\n"
+    
+    if opponent_idea:
+        competition_context += f"# Latest Competition\n## Recent thoughts from your competitor:\n{opponent_idea}\n\n"
+
+    prompt = competition_context + "# Your Move\nCreate your winning design."
+
+    print(f"Prompt: {prompt}")
+    return query_ollama(prompt)
 
 
 def query_ollama(prompt, temperature=0.6, top_k=50, top_p=0.95):
@@ -50,53 +73,7 @@ def query_ollama(prompt, temperature=0.6, top_k=50, top_p=0.95):
         return response.json().get("response", "No response")
     else:
         return f"Error: {response.status_code} - {response.text}"
-
-
-def generate_design(agent_name, agent_desc, previous_opponent_idea=None, past_designs=None):
-    """Generates a UX/UI design description from an agent, considering both competition and past iterations."""
-
-    competition_context = (
-        "You are in a direct competition to prove your design philosophy is superior. "
-        "Your opponent believes the opposite of your approach is better. "
-        "While you should remain professional, you must defend your design principles "
-        "and demonstrate why your approach leads to better outcomes for users."
-    )
-
-    # Process past design history if available
-    design_history = ""
-    if past_designs:
-        past_designs_text = "\n".join(f"- {design}" for design in past_designs)
-        design_history = (
-            f"Your previous design thoughts:\n{past_designs_text}\n"
-            "Consider what worked well in these approaches and what could be improved."
-        )
-
-    # Process competitor insight if available
-    competitor_analysis = ""
-    if previous_opponent_idea:
-        competitor_analysis = (
-            f"A different perspective to consider:\n{previous_opponent_idea}\n\n"
-            f"While this approach has its merits, you have unique expertise in {agent_desc}.\n"
-            "Consider how you can:\n"
-            "1. Draw inspiration from elements that align with your design principles\n"
-            "2. Improve upon areas where your expertise suggests better approaches\n"
-            "3. Identify innovative opportunities they may have missed"
-        )
-
-    prompt = (
-        f"You are {agent_name}, with the following expertise and mission:\n"
-        f"{agent_desc}\n\n"
-        f"{competition_context}\n\n"
-        f"Task: {TASK}\n\n"
-        f"{design_history}\n"
-        f"{competitor_analysis}\n\n"
-        "Focus on your strengths while remaining open to learning from others.\n"
-        "Describe the UI layout and user interactions as succinctly as possible,\n"
-        "emphasizing your unique perspective and expertise."
-    )
-
-    return query_ollama(prompt)
-
+    
 
 def extract_think_block(response):
     """Extracts content inside the <think></think> block from an agent's response."""
@@ -149,11 +126,18 @@ def run_experiment(rounds=3):
 
 
 if __name__ == "__main__":
-    final_results = run_experiment(rounds=3)
+    # Add argument parser
+    parser = argparse.ArgumentParser(description='Run competitive design agents experiment')
+    parser.add_argument('--rounds', type=int, default=3,
+                       help='Number of rounds to run the experiment (default: 3)')
+    
+    args = parser.parse_args()
+    
+    final_results = run_experiment(rounds=args.rounds)
 
     filename = f"competitive_agents_results_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(final_results, f, indent=4)
 
-    print("\nExperiment completed! Results saved to competitive_agents_results.json.")
+    print(f"\nExperiment completed! Results saved to {filename}")
