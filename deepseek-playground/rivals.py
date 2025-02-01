@@ -17,8 +17,7 @@ AGENTS = {
 }
 
 TASK = (
-    "Design a responsive web interface (desktop & mobile) for a watch-like roadmap view "
-    "inspired by luxury brands like Ressence or MB&F. Provide a glanceable overview and allow zoom. "
+    "Design a responsive web interface (desktop & mobile) for a watch-like roadmap view inspired by luxury brands like Ressence or MB&F. "
     "The features of this app should be particularly valuable for solo gamedevs working on game jams and other ambitious projects with time constraints."
 )
 
@@ -38,20 +37,35 @@ def generate_design(agent_name, agent_desc, opponent_idea=None, past_designs=Non
     )
 
     competition_context = (
+        f"# Design Challenge\n{TASK}\n\n"
         f"# Your Design Philosophy\n{agent_name}: {agent_desc}\n\n"
         f"# Competition Stakes\n{developer_message}\n\n"
-        f"# Design Challenge\n{TASK}\n\n"
     )
 
     if past_designs:
-        competition_context += "# Design Evolution\n## Your previous iterations of this design:\n" + "\n".join(f"- {d}" for d in past_designs) + "\n\n"
-    
+        competition_context += "# Design Evolution\n## Your previous iterations of this design:\n"
+        for i, d in enumerate(past_designs, start=0):
+            if d:
+                competition_context += (
+                    f"--- START_OF_DESIGN_ATTEMPT_{i+1} ---\n"
+                    f"{d}\n"
+                    f"--- END_OF_DESIGN_ATTEMPT_{i+1} ---\n\n"
+                )  
+
     if opponent_idea:
-        competition_context += f"# Latest Competition\n## Recent thoughts from your competitor:\n{opponent_idea}\n\n"
+        competition_context += "# Latest Competition\n## Recent thoughts from your competitor's approach:\n"
+        for i, t in enumerate(opponent_idea, start=0):
+            if t:
+                competition_context += (
+                    f"--- START_OF_COMPETITOR_THOUGHTS_{i+1} ---\n"
+                    f"{t}\n"
+                    f"--- END_OF_COMPETITOR_THOUGHTS_{i+1} ---\n\n"
+                )
 
     prompt = competition_context + "# Your Move\nCreate your winning design."
 
     print(f"Prompt: {prompt}")
+
     return query_ollama(prompt)
 
 
@@ -83,29 +97,35 @@ def extract_think_block(response):
 
 def run_experiment(rounds=3):
     """Runs multiple rounds where agents accumulate inspiration over time."""
+    start_time = time.time()  # Track when experiment starts
+
+
     results = {
-        "Minimalist": {"thoughts": [], "design": ""},
-        "Expressive": {"thoughts": [], "design": ""}
+        "Minimalist": {"thoughts": [], "designs": [], "latest_design": ""},
+        "Expressive": {"thoughts": [], "designs": [], "latest_design": ""}
     }
 
     for round_num in range(1, rounds + 1):
+        round_start = time.time()  # Track the start of each round
         print(f"\n### ROUND {round_num} ###\n")
 
         # Aggregate all past insights for deeper inspiration
         # filter to just the last 5 rounds
-        minimalist_thought_history = "\n".join(results["Expressive"]["thoughts"][-5:]) if results["Expressive"]["thoughts"] else None
-        expressive_thought_history = "\n".join(results["Minimalist"]["thoughts"][-5:]) if results["Minimalist"]["thoughts"] else None
+        minimalist_thought_history = results["Expressive"]["thoughts"][-5:] if results["Expressive"]["thoughts"] else None
+        expressive_thought_history = results["Minimalist"]["thoughts"][-5:] if results["Minimalist"]["thoughts"] else None
 
         # First round has no shared insights
         minimalist_previous_think = minimalist_thought_history if round_num > 1 else None
         expressive_previous_think = expressive_thought_history if round_num > 1 else None
 
-        # Generate Minimalist Design
-        minimalist_response = generate_design("Minimalist", AGENTS["Minimalist"], minimalist_previous_think)
+        # Generate Minimalist Design, it gets thoughts from the expressive but previous designs from the minimalist
+        previous_minimalist_design = results["Minimalist"]["designs"][-5:]
+        minimalist_response = generate_design("Minimalist", AGENTS["Minimalist"], expressive_previous_think, previous_minimalist_design)
         minimalist_think = extract_think_block(minimalist_response)
 
-        # Generate Expressive Design
-        expressive_response = generate_design("Expressive", AGENTS["Expressive"], expressive_previous_think)
+        # Generate Expressive Design, it gets thoughts from the minimalist but previous designs from the expressive
+        previous_expressive_design = results["Expressive"]["designs"][-5:]
+        expressive_response = generate_design("Expressive", AGENTS["Expressive"], minimalist_previous_think, previous_expressive_design)
         expressive_think = extract_think_block(expressive_response)
 
         # Store the new thoughts (accumulate growth)
@@ -113,14 +133,18 @@ def run_experiment(rounds=3):
         results["Expressive"]["thoughts"].append(minimalist_think)
 
         # Store the full designs as well (optional for debugging)
-        results["Minimalist"]["design"] = minimalist_response
-        results["Expressive"]["design"] = expressive_response
+        results["Minimalist"]["designs"].append(minimalist_response)
+        results["Expressive"]["designs"].append(expressive_response)
 
-        # Print extracted <think> blocks
-        print("\n--- Minimalist Think Evolution ---\n", minimalist_thought_history)
-        print("\n--- Expressive Think Evolution ---\n", expressive_thought_history)
+        # Store the latest design
+        results["Minimalist"]["latest_design"] = minimalist_response
+        results["Expressive"]["latest_design"] = expressive_response
 
-        time.sleep(5)  # Avoid spamming requests
+        round_end = time.time()
+        print(f"Round {round_num} runtime: {(round_end - round_start) / 60} minutes")
+
+    total_time = time.time() - start_time
+    print(f"\nTotal experiment runtime: {(total_time) / 60} minutes")
 
     return results
 
@@ -135,7 +159,7 @@ if __name__ == "__main__":
     
     final_results = run_experiment(rounds=args.rounds)
 
-    filename = f"competitive_agents_results_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    filename = f"competitive_agents_results_iterations-{args.rounds}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(final_results, f, indent=4)
