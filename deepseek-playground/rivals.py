@@ -22,7 +22,7 @@ TASK = (
 )
 
 
-def generate_design(agent_name, agent_desc, opponent_idea=None, past_designs=None):
+def generate_design(agent_name, agent_desc, competitor_past_thoughts=None, past_designs=None):
     stakes = (
         "This is a career-defining moment. The chosen design will not only become the product's signature look, "
         "but will be featured in major design publications and conferences. Your name and philosophy will become "
@@ -52,9 +52,9 @@ def generate_design(agent_name, agent_desc, opponent_idea=None, past_designs=Non
                     f"--- END_OF_DESIGN_ATTEMPT_{i+1} ---\n\n"
                 )  
 
-    if opponent_idea:
+    if competitor_past_thoughts:
         competition_context += "# Latest Competition\n## Recent thoughts from your competitor's approach:\n"
-        for i, t in enumerate(opponent_idea, start=0):
+        for i, t in enumerate(competitor_past_thoughts, start=0):
             if t:
                 competition_context += (
                     f"--- START_OF_COMPETITOR_THOUGHTS_{i+1} ---\n"
