@@ -133,8 +133,8 @@ def run_experiment(rounds=3):
         results["Expressive"]["thoughts"].append(minimalist_think)
 
         # Store the full designs as well (optional for debugging)
-        results["Minimalist"]["designs"].append(minimalist_response)
-        results["Expressive"]["designs"].append(expressive_response)
+        results["Minimalist"]["designs"].append(minimalist_response.split("</think>")[1])
+        results["Expressive"]["designs"].append(expressive_response.split("</think>")[1])
 
         # Store the latest design
         results["Minimalist"]["latest_design"] = minimalist_response
