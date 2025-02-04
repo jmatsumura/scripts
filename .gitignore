@@ -2,3 +2,7 @@
 **/__pycache__/*
 **/*competitive_agents_results_*.json
 **/*competitive_agents_results_*_similarity.csv
+**/*creator_critic_results_*.json
+**/*creator_critic_results_*_similarity.csv
+**/gamedev*.csv
+**/data
