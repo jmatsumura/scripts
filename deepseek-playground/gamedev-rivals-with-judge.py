@@ -301,6 +301,7 @@ def json_to_csv(input_files: List[str], labels: List[str], output_file: str = No
                         "feasibility_score": scores.get("feasibility", ""),
                         "innovation_score": scores.get("innovation", ""),
                         "design_iteration": iteration,
+                        "total_score": sum(scores.values()),
                         "agent": agent,
                         "label": label
                     })
@@ -309,7 +310,7 @@ def json_to_csv(input_files: List[str], labels: List[str], output_file: str = No
         with open(output_file, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=["originality_score", "feasibility_score", 
                                                  "innovation_score", "design_iteration", 
-                                                 "agent", "label"])
+                                                 "total_score", "agent", "label"])
             writer.writeheader()
             writer.writerows(csv_rows)
         print(f"Scores extracted to {output_file}")
