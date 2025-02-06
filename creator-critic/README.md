@@ -1,4 +1,12 @@
-Experiments around the **Creator-Critic Flow** for LLM agents. Inspired by reinforcement learning paradigms, particularly **Actor-Critic** methods. Consists of a dynamic interplay between two key roles:
+Experiments around the **Creator-Critic Flow** for LLM agents. Inspired by reinforcement learning paradigms, particularly **Actor-Critic** methods. Consists of a dynamic interplay between two roles.
+
+## Posts
+
+Below write-ups stemming from these scripts:
+
+- [first creator-critic tests](https://www.kokutech.com/blog/growth/creator-critic-agent-architecture-results)
+
+## Definitions
 
 1. **Creator**  
    - This is the LLM acting as the **idea generator**.  
