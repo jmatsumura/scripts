@@ -2,7 +2,7 @@ Experiments around the **Creator-Critic Flow** for LLM agents. Inspired by reinf
 
 ## Posts
 
-Below write-ups stemming from these scripts:
+Write-ups stemming from these scripts:
 
 - [agent-critic with dual critic tests](https://www.kokutech.com/blog/growth/dual-critic-agent-architecture-results)
 - [first creator-critic tests](https://www.kokutech.com/blog/growth/creator-critic-agent-architecture-results)

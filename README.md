@@ -3,7 +3,7 @@ Scripts I've written while working on stuff at [KokuTech](https://www.kokutech.c
 ## Contents
 
 ### [Creator Critic](./creator-critic/)
-Scripts for experiments for agents leveraging the creator-critic paradigm.
+Scripts for experiments for agents leveraging the creator(or actor)-critic paradigm.
 
 ### [Deepseek Playground](./deepseek-playground/)
 Scripts for playing around with Deepseek locally and learning what's possible now that there's a much lower cost for complex reasoning generations.
