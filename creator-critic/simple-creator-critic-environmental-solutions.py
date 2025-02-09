@@ -217,7 +217,7 @@ if __name__ == "__main__":
     final_results = run_iteration_cycle(args.num_iterations)
     
     # Save results
-    filename = f"environmental_solutions_results_{args.num_iterations}_{time.strftime('%Y%m%d_%H%M%S')}.json"
+    filename = f"creator_critic_environmental_solutions_results_{args.num_iterations}_{time.strftime('%Y%m%d_%H%M%S')}.json"
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(final_results, f, indent=4)
     
