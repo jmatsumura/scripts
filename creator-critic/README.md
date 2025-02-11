@@ -4,8 +4,10 @@ Experiments around the **Creator-Critic Flow** for LLM agents. Inspired by reinf
 
 Write-ups stemming from these scripts:
 
-- [agent-critic with dual critic tests](https://www.kokutech.com/blog/growth/dual-critic-agent-architecture-results)
-- [first creator-critic tests](https://www.kokutech.com/blog/growth/creator-critic-agent-architecture-results)
+- [`simple-creator-critic-parenting-structures.py`: see if LLMs can produce parenting advice](https://www.kokutech.com/blog/growth/parental-structures-designed-by-llms)
+- [`simple-creator-critic-environmental-solutions.py`: test if agents can arrive at environmental solutions](https://www.kokutech.com/blog/growth/can-llms-arrive-at-novel-environmental-solutions)
+- [`simple-creator-critic*.py`: agent-critic with dual critic tests](https://www.kokutech.com/blog/growth/dual-critic-agent-architecture-results)
+- [`creator-critic*.py`: first creator-critic tests](https://www.kokutech.com/blog/growth/creator-critic-agent-architecture-results)
 
 ## Definitions
 
