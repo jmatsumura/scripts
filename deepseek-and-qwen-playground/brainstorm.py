@@ -39,11 +39,6 @@ THINKING_CONSTRAINTS = """## THINKING CONSTRAINTS
 - Find 1 paradoxical element
 - Suggest 3 concrete adjustments"""
 
-PROCESSING_RULES = """## PROCESSING RULES
-- Remove vague statements
-- Highlight actionable items
-- Simplify to bullet points"""
-
 INSTRUCTION_GUIDE = """## INSTRUCTION GUIDE
 - Create step-by-step recommendations
 - Keep advice practical
@@ -259,12 +254,10 @@ If exploring a branch, ensure your solution ties back to the root problem."""
         
     return seed
 
-def process_thoughts(seed: CognitiveSeed, processing_rules: str) -> CognitiveSeed:
+def process_thoughts(seed: CognitiveSeed) -> CognitiveSeed:
     """
-    Transforms raw thoughts into instruction-ready material
-    processing_rules: Instructions for cleaning/structuring thoughts
+    Transforms raw thoughts by removing note lines
     """
-    # Example processing (customize this)
     processed = "\n".join([
         line for line in seed.raw_thoughts.split("\n")
         if not line.strip().startswith("Note:")
@@ -272,7 +265,7 @@ def process_thoughts(seed: CognitiveSeed, processing_rules: str) -> CognitiveSee
     return CognitiveSeed(
         raw_thoughts=seed.raw_thoughts,
         processed_thoughts=processed,
-        metadata={"processed_with": processing_rules}
+        metadata={"processed": True}
     )
 
 def identify_branches(seed: CognitiveSeed, config: Dict) -> List[Dict]:
@@ -371,14 +364,14 @@ def explore_thought_tree(
     
     return seed
 
-def process_thought_tree(root_seed: CognitiveSeed, processing_rules: str) -> List[Dict]:
+def process_thought_tree(root_seed: CognitiveSeed) -> List[Dict]:
     """Process all thoughts in the tree and return structured branch insights."""
     insights = []
     print("🔄 Processing thought tree...")
     
     def traverse(seed: CognitiveSeed):
         if seed:
-            processed = process_thoughts(seed, processing_rules)
+            processed = process_thoughts(seed)
             if processed:
                 insight = {
                     'depth': seed.branch_depth,
@@ -423,8 +416,7 @@ def save_results(thought_tree: CognitiveSeed, branch_insights: List[Dict], conte
         'config': {
             'model_config': MODEL_CONFIG,
             'generation_config': GENERATION_CONFIG,
-            'thinking_constraints': THINKING_CONSTRAINTS,
-            'processing_rules': PROCESSING_RULES
+            'thinking_constraints': THINKING_CONSTRAINTS
         }
     }
     
@@ -454,7 +446,7 @@ if __name__ == "__main__":
     
     # Process all thoughts in the tree
     print("📊 Processing thoughts by branch...")
-    branch_insights = process_thought_tree(thought_tree, PROCESSING_RULES)
+    branch_insights = process_thought_tree(thought_tree)
     
     # Save results to JSON file
     save_results(thought_tree, branch_insights, PROBLEM_STATEMENT_CONTEXT)
