@@ -14,12 +14,6 @@ PROBLEM_STATEMENT_CONTEXT = "What kind of algorithm could I use to draw pixel ar
 # example2: "I need a title for my new movie set in a cyberpunk dystopia"
 # example3: "What is the best way for me to learn piano?"
 
-INSIGHT_SYSTEM_PROMPT = """Transform these observations into practical advice:
-{thoughts}
-
-# GUIDELINES
-{instruction_prompt}"""
-
 # Branch Identification Prompt
 BRANCH_IDENTIFICATION_PROMPT = """# CORE PROBLEM STATEMENT
 {context}
@@ -280,24 +274,6 @@ def process_thoughts(seed: CognitiveSeed, processing_rules: str) -> CognitiveSee
         processed_thoughts=processed,
         metadata={"processed_with": processing_rules}
     )
-
-def generate_insights(
-    seed: CognitiveSeed,
-    instruction_prompt: str,
-    prompt: str = "Transform these thoughts into clear, actionable insights:",
-    config: Dict = DEFAULT_CONFIG
-) -> str:
-    """
-    Generates polished output using instruction model
-    instruction_prompt: Guidance for final output format/purpose
-    prompt: The specific task prompt for the model
-    """
-    system_prompt = INSIGHT_SYSTEM_PROMPT.format(
-        thoughts=seed.processed_thoughts,
-        instruction_prompt=instruction_prompt
-    )
-
-    return query_ollama(prompt, config, config["instruction_model"], system_prompt)
 
 def identify_branches(seed: CognitiveSeed, config: Dict) -> List[Dict]:
     """Analyze a thought to identify distinct conceptual branches."""
