@@ -4,6 +4,7 @@ Experiments around the **Creator-Critic Flow** for LLM agents. Inspired by reinf
 
 Write-ups stemming from these scripts:
 
+- [`algorithmic-pixel-art-creator-critic.py`: testing agents who explore lots of short paths](https://www.kokutech.com/blog/growth/breadth-first-agent-architecture)
 - [`simple-creator-critic-sprite-sheet-requirements-generator.py`: designing a complex technical pipeline](https://www.kokutech.com/blog/gamedev/sprite-pipeline-with-llm-critics)
 - [`simple-creator-critic-parenting-structures.py`: see if LLMs can produce parenting advice](https://www.kokutech.com/blog/growth/parental-structures-designed-by-llms)
 - [`simple-creator-critic-environmental-solutions.py`: test if agents can arrive at environmental solutions](https://www.kokutech.com/blog/growth/can-llms-arrive-at-novel-environmental-solutions)

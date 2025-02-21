@@ -2,15 +2,16 @@ import json
 import argparse
 import time
 import requests
+import os
 import re
 from sentence_transformers import SentenceTransformer
 import torch.nn.functional as F
 import random
 
 # Configure models
-CREATOR_MODEL = "deepseek-r1:32b"  # For algorithm generation
-CRITIC_MODEL = "mistral-nemo"      # For algorithm refinement
-SIMILARITY_THRESHOLD = 0.8  # Higher threshold for uniqueness
+CREATOR_MODEL = os.getenv("CREATOR_MODEL", "deepseek-r1:32b")  # For algorithm generation
+CRITIC_MODEL = os.getenv("CRITIC_MODEL", "qwen2.5:32b")      # For algorithm refinement
+SIMILARITY_THRESHOLD = 0.7  # Higher threshold for uniqueness
 
 # Initialize sentence transformer
 sentence_model = SentenceTransformer('all-MiniLM-L6-v2')

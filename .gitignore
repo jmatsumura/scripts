@@ -9,3 +9,5 @@
 **/*competitive_agents_results_*.json
 **/*competitive_agents_results_*_similarity.csv
 **/gamedev*.csv
+
+**/*brainstorm*.json
