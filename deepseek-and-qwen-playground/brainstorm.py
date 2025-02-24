@@ -19,7 +19,7 @@ BRANCH_IDENTIFICATION_PROMPT = """# CORE PROBLEM STATEMENT
 {context}
 
 # GUIDELINES
-Analyze the thought below and identify up to two distinct branches that directly address this specific problem.
+Analyze the thought below and identify up to three distinct branches that directly address this specific problem.
 For each branch, provide:
 1. A title describing the solution approach
 2. The key elements to explore that directly relate to solving the original problem
@@ -31,7 +31,7 @@ CONCEPT: <key elements>
 REASON: <why this helps solve the original problem>
 
 # YOUR TASK
-Identify the two most promising branches that stay strictly within the scope of the original problem."""
+Identify the three most promising branches that stay strictly within the scope of the original problem."""
 
 # Thinking Constraints Template
 THINKING_CONSTRAINTS = """## THINKING CONSTRAINTS
@@ -407,7 +407,15 @@ def save_results(thought_tree: CognitiveSeed, branch_insights: List[Dict], conte
     """Save the thought exploration results to a JSON file."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     filename = f"brainstorm_{timestamp}.json"
+    sift_filename = f"brainstorm_{timestamp}_sift.json"
     
+    # Extract just the branch concepts for simplified format
+    simplified_insights = []
+    for insight in branch_insights:
+        if insight.get('branch_concept'):
+            simplified_insights.append(insight['branch_concept'])
+    
+    # Main detailed results
     results = {
         'context': context,
         'timestamp': datetime.now().isoformat(),
@@ -420,9 +428,19 @@ def save_results(thought_tree: CognitiveSeed, branch_insights: List[Dict], conte
         }
     }
     
+    # Simplified insights
+    sift_results = {
+        'insights': simplified_insights
+    }
+    
     print(f"\n💾 Saving results to {filename}...")
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Saving concept list to {sift_filename}...")
+    with open(sift_filename, 'w', encoding='utf-8') as f:
+        json.dump(sift_results, f, indent=2, ensure_ascii=False)
+    
     print(f"  ✓ Results saved successfully")
 
 # Example usage pattern
