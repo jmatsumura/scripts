@@ -11,6 +11,9 @@ Scripts for testing how Deepseek R1 and Qwen instruct can collaborate for better
 ### [Deepseek Playground](./deepseek-playground/)
 Scripts for playing around with Deepseek locally and learning what's possible now that there's a much lower cost for complex reasoning generations.
 
+### [QwQ Playground](./qwq-playground/)
+Scripts for playing around with the QwQ local reasoning model.
+
 ### [Word Game Dictionary Builder](./word-game-dictionary-builder/)
 Tools for building and formatting word dictionaries, with outputs optimized for word games and similar applications.
 
